@@ -1,6 +1,3 @@
-use std::num::ParseIntError;
-
-
 fn main() {
     println!("Hello, world!");
 
@@ -121,4 +118,164 @@ fn string_type() {
     let moko = name.replace("Dwi", "moko");
 
     println!("{}", moko);
+}
+
+#[test]
+fn ownership_rules() {
+    let a = 10;
+
+    {
+        let b = 20;
+        println!("{}",b);
+    }
+
+    println!("{}",a);
+// let a 10; kode rust dijalankan dari atas ke bawah
+}
+
+#[test]
+fn data_copy() {
+    let a = 10;
+    let b = a;
+    println!("{} {}", a, b);
+}
+
+#[test]
+fn ownership_movement() {
+    let name1 = String::from("moko");
+
+    let name2 = name1;
+
+    println!("{}", name2);
+}
+
+#[test]
+fn clone() {
+    let name1 = String::from("moko");
+    let name2 = name1.clone();
+
+    println!("{} {}", name1, name2);
+}
+
+#[test]
+fn if_expression() {
+    let value = 7;
+    let result =  if value >= 8 {
+        "Good"
+    } else if value >= 6 {
+        "Not Bad"
+    } else if value >= 3 {
+        "Bad"
+    } else {
+        "Very Bad"
+    };
+
+    println!("{}", result);
+}
+
+#[test]
+fn loop_expression() {
+    let mut counter = 0;
+    loop {
+        counter += 1;
+
+        if counter > 10 {
+            break;
+        } else if counter %2 == 0 {
+            continue;
+        }
+
+        println!("Counter : {}", counter);
+    }
+}
+
+#[test]
+fn loop_return_value() {
+    let mut counter = 0;
+    let result = loop {
+        counter +=1;
+
+        if counter > 10 {
+            break counter * 2;
+        }
+    };
+    println!("result : {}", result);
+}
+
+#[test]
+fn loop_label() {
+    let mut number = 1;
+    'outer: loop{
+        let mut i = 1;
+        loop {
+            if number > 10 {
+                break 'outer;
+            }
+
+            println!("{} x {} = {}", number , i, number * i);
+            i += 1;
+            if i > 10 {
+                break;
+            }
+        }
+        number += 1;
+    }
+}
+
+#[test]
+fn while_loop() {
+    let mut counter = 0;
+    while counter <= 10 {
+        if counter % 2 == 0 {
+            println!("Counter : {}", counter);
+        }
+
+        counter += 1;
+    }
+}
+
+#[test]
+fn array_iteration() {
+    let array: [&str;5] = ["A", "B", "C", "D", "E"];
+    let mut index = 0;
+
+    while index < array.len() {
+        println!("Value : {}", array[index]);
+        index += 1;
+    }
+}
+
+#[test]
+fn for_loop() {
+    let array: [&str;5] = ["A", "B", "C", "D", "E"];
+
+    for value in array {
+        println!("Value : {}", value);
+    }
+}
+
+#[test]
+fn range_exclusive() {
+    let array: [&str;5] = ["A", "B", "C", "D", "E"];
+
+    let range = 0..5;
+    println!("Start: {}", range.start);
+    println!("End: {}", range.end);
+
+    for i in range {
+        println!("Value : {}", array[i]);
+    }
+}
+
+#[test]
+fn range_inclusive() {
+    let array: [&str;5] = ["A", "B", "C", "D", "E"];
+
+    let range = 0..=4;
+    println!("Start: {}", range.start());
+    println!("End: {}", range.end());
+
+    for i in range {
+        println!("Value : {}", array[i]);
+    }
 }
