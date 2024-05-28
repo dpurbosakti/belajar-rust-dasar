@@ -1,3 +1,5 @@
+use core::slice;
+
 fn main() {
     println!("Hello, world!");
 
@@ -278,4 +280,159 @@ fn range_inclusive() {
     for i in range {
         println!("Value : {}", array[i]);
     }
+}
+
+fn say_hello(first_name: &str, last_name: &str) {
+    println!("Hello {} {}", first_name, last_name);
+}
+
+#[test]
+fn test_say_hello() {
+    say_hello("moko", "sakti");
+}
+
+fn factorial_loop(n: i32) -> i32 {
+    if n < 1 {
+        return 0;
+    }
+
+    let mut result = 1;
+    for i in 1..=n {
+        result *= i;
+    }
+
+    return result;
+}
+
+#[test]
+fn test_factorial_loop() {
+    let result = factorial_loop(5);
+    println!("Result {}", result);
+
+    let result = factorial_loop(-10);
+    println!("Result {}", result);
+}
+
+fn print_text(value: String, times:u32) {
+    if times == 0 {
+        return;
+    } else {
+        println!("{}", value)
+    }
+
+    print_text(value, times -1);
+}
+
+#[test]
+fn test_print_text() {
+    print_text(String::from("moko"), 5);
+}
+
+fn factorial_recursive(n: u32) -> u32 {
+    if n <=1 {
+        return 1;
+    }
+
+    n * factorial_recursive(n-1)   
+}
+
+#[test]
+fn test_factorial_recursive() {
+    let result = factorial_recursive(5);
+    println!("Result {}", result);
+}
+
+fn print_number(number: i32) {
+    println!("number {}", number);
+}
+
+fn hi(name: String) {
+    println!("name {}", name);
+}
+
+#[test]
+fn test_hi() {
+    let number = 10;
+    print_number(number);
+    println!("{}", number);
+
+    let name = String::from("moko");
+    hi(name);
+    // println!("{}", name); borrow of moved value: `name`
+}
+
+fn full_name(first_name: String, last_name: String) -> String {
+    format!("{} {}", first_name, last_name)
+}
+
+#[test]
+fn test_full_name() {
+    let first_name = String::from("moko");
+    let last_name = String::from("sakti");
+    let full_name = full_name(first_name, last_name);
+    println!("fullname {}", full_name);
+    // println!("firstname {}", first_name);
+    // println!("lastname {}", last_name);
+}
+
+// fn change_value(value: &String) {
+//     value.push_str("test");
+// }
+
+// #[test]
+// fn test_change_value() {
+//     let mut value = String::from("moko");
+//     change_value(&value);
+//     println!("{}", value);
+// }
+
+// mutable reference
+// fn change_value(value: &mut String) {
+//     value.push_str("test");
+// }
+
+// #[test]
+// fn test_change_value() {
+//     let mut value = String::from("moko");
+//     change_value(&mut value);
+//     println!("{}", value);
+// }
+
+// fn get_full_name(first_name: &String, last_name: &String) -> &String {
+//     let result = format!("{} {}", first_name, last_name);
+//     return &result;
+// }
+
+// #[test]
+// fn test_get_full_name() {
+//     let first_name = String::from("moko");
+//     let last_name = String::from("sakti");
+//     let full_name = get_full_name(&first_name, &last_name);
+//     println!("fullname {}", full_name);
+//     // println!("firstname {}", first_name);
+//     // println!("lastname {}", last_name);
+// }
+
+#[test]
+fn slice_reference() {
+    let array: [i32; 10] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+    let slice1: &[i32] = &array[..];
+    println!("{:?}", slice1);
+
+    let slice2: &[i32] = &array[0..5];
+    println!("{:?}", slice2);
+
+    let slice3: &[i32] = &array[5..];
+    println!("{:?}", slice3);
+}
+
+#[test]
+fn string_slice() {
+    let name: String = String::from("moko sakti");
+    let first_name: &str = &name[0..4];
+    println!("{}", first_name);
+
+    let last_name: &str = &name[5..];
+    println!("{}", last_name);
 }
