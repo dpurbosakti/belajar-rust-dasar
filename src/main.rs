@@ -436,3 +436,226 @@ fn string_slice() {
     let last_name: &str = &name[5..];
     println!("{}", last_name);
 }
+
+struct Person{
+    first_name: String,
+    middle_name: String,
+    last_name: String,
+    age: u8,
+}
+
+impl Person{
+    fn say_hello(&self, name: &str) {
+        println!("hello{}, my name is {}", name, self.first_name);
+    }
+}
+
+fn print_person(person: &Person) {
+    println!("{}", person.first_name);
+    println!("{}", person.middle_name);
+    println!("{}", person.last_name);
+    println!("{}", person.age);
+}
+
+#[test]
+fn struct_person() {
+    let person: Person = Person{
+        first_name: String::from("dwi"),
+        middle_name: String::from("moko"),
+        last_name: String::from("sakti"),
+        age: 30,
+    };
+
+    print_person(&person);
+
+    let person2: Person = Person{..person};
+    print_person(&person2);
+}
+
+struct GeoPoint(f64, f64);
+
+impl GeoPoint{
+    fn new(long:f64, lat:f64) -> GeoPoint {
+        GeoPoint(long, lat)
+    }
+}
+
+#[test]
+fn test_associated_function() {
+    let geo_point: GeoPoint = GeoPoint::new(10.0, 10.0);
+    println!("geopoint {}", geo_point.0);
+    println!("geopoint {}", geo_point.1);
+}
+
+#[test]
+fn tuple_struct() {
+    let geo_point = GeoPoint(-6.200000, 106.816666);
+    println!("long : {}", geo_point.0);
+    println!("lat : {}", geo_point.1);
+}
+
+struct Nothing;
+
+#[test]
+fn test_nothing() {
+    let _nothing1: Nothing = Nothing;
+    let _nothing2: Nothing = Nothing{};
+}
+
+enum Level{
+    Regular,
+    Premium,
+    Platinum,
+}
+
+#[test]
+fn test_enum() {
+    let level: Level = Level::Regular;
+
+    match level {
+        Level::Regular => {
+            println!("Regular");
+        }
+        Level::Premium => {
+            println!("Premium");
+        }
+        Level::Platinum => {
+            println!("Platinum");
+        }
+    }
+}
+
+enum Payment{
+    CreditCard(String),
+    BankTranksfer(String, String),
+    EWallet(String, String),
+}
+
+impl Payment{
+    fn pay(&self, amount: u32){
+        match self{
+            Payment::CreditCard(number) => {
+                println!("Paying with credit card {} amount {}", number, amount);
+            }
+            Payment::BankTranksfer(bank, number) => {
+                println!("Paying with bank transfer {} {} amount {}", bank, number, amount);
+
+            }
+            Payment::EWallet(wallet, number) => {
+                println!("Paying with e-wallet {} {} amount {}", wallet, number, amount);
+            }
+
+        }
+    }
+}
+
+#[test]
+fn test_payment() {
+    let _payment1: Payment = Payment::CreditCard(String::from("423424242"));
+    _payment1.pay(20);
+    let _payment2: Payment = Payment::BankTranksfer(String::from("BCA"), String::from("23535353"));
+    _payment2.pay(20);
+    let _payment3: Payment = Payment::EWallet(String::from("Gopay"), String::from("23535353"));
+    _payment3.pay(20);
+}
+
+#[test]
+fn test_match_value() {
+    let name = "Joko";
+
+    match name{
+        "moko" => {
+            println!("hello moko");
+        }
+        "sakti" => {
+            println!("hello sakti");
+        }
+        other => {
+            println!("hello {}", other);
+        }
+    }
+
+    match name{
+        "moko" | "sakti" | "Joko" => {
+            println!("hello bro");
+        }
+        
+        other => {
+            println!("hello {}", other);
+        }
+    }
+}
+
+#[test]
+fn test_range_pattern() {
+    let value = 100;
+    match value {
+        75..=100 => {
+            println!("Great");
+        }
+        50..=74 => {
+            println!("Good");
+        }
+        25..=49 => {
+            println!("Not Bad");
+        }
+        0..=24 => {
+            println!("Bad");
+        }
+        other => {
+            println!("Invalid value {}", other);
+        }
+    }
+}
+
+#[test]
+fn test_struct_pattern() {
+    let point = GeoPoint(0.0, 1.0);
+    match point {
+        GeoPoint(long, 0.0) => {
+            println!("long : {}", long);
+        }
+        GeoPoint(0.0, lat) => {
+            println!("lat : {}", lat);
+        }
+        GeoPoint(long, lat) => {
+            println!("long :{}, lat :{}", long, lat);
+        }
+    }
+
+    let person = Person{
+        first_name: String::from("dwi"),
+        middle_name: String::from("moko"),
+        last_name: String::from("sakti"),
+        age: 30,
+    };
+
+    match person {
+        Person{first_name, last_name,..} => {
+            println!("firstname: {}, lastname: {}", first_name, last_name)
+        }
+    }
+}
+
+#[test]
+fn test_ignoring() {
+    let point = GeoPoint(0.0, 1.0);
+    match point {
+        GeoPoint(long, _) => {
+            println!("long : {}", long);
+        }
+    }
+}
+
+#[test]
+fn test_match_expression() {
+    let value: i32 = 2;
+    let result: &str = match value {
+        0 => "nol",
+        1 => "satu",
+        2 => "dua",
+        _ => "invalid"
+    };
+
+    println!("result: {}", result);
+}
