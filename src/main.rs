@@ -1,4 +1,33 @@
 use core::slice;
+use std::fmt::format;
+mod first;
+mod second;
+mod third;
+mod model;
+
+use first::say_hello;
+use second::say_hello as say_hello_second;
+use model::User;
+
+#[test]
+fn test_use() {
+    say_hello();
+    say_hello_second();
+    first::second::third::say_hello();
+}
+
+#[test]
+fn test_module() {
+    let user: User = User { 
+        first_name: String::from("moko"), 
+        last_name: String::from("sakti"), 
+        username: String::from("mokosakti"), 
+        email: String::from("moko@gmail.com"), 
+        age: 30 
+    };
+
+    user.say_hello("budi");
+}
 
 fn main() {
     println!("Hello, world!");
@@ -282,14 +311,14 @@ fn range_inclusive() {
     }
 }
 
-fn say_hello(first_name: &str, last_name: &str) {
-    println!("Hello {} {}", first_name, last_name);
-}
+// fn say_hello(first_name: &str, last_name: &str) {
+//     println!("Hello {} {}", first_name, last_name);
+// }
 
-#[test]
-fn test_say_hello() {
-    say_hello("moko", "sakti");
-}
+// #[test]
+// fn test_say_hello() {
+//     say_hello("moko", "sakti");
+// }
 
 fn factorial_loop(n: i32) -> i32 {
     if n < 1 {
@@ -658,4 +687,153 @@ fn test_match_expression() {
     };
 
     println!("result: {}", result);
+}
+
+type Age = u8;
+type IdentityNumber = String;
+
+struct Customer{
+    id: IdentityNumber,
+    name: String,
+    age: Age
+}
+
+#[test]
+fn test_type_alias() {
+    let customer = Customer{
+        id: String::from("12345"),
+        name: String::from("moko"),
+        age: 30,
+    };
+
+    println!("{} {} {}", customer.id, customer.name, customer.age);
+}
+struct Manusia {
+    name: String,
+    tinggi: u16
+}
+
+struct SimplePerson {
+    name: String,
+}
+
+trait CanSayHello{
+    // default method, yg mengimplementasi trait ini otomatis mempunyai method ini
+    fn hello(&self) -> String {
+        return String::from("Hello");
+    }
+
+    fn say_hello(&self) -> String;
+    fn say_hello_to(&self, name: &str) -> String; 
+}
+
+trait CanSayGoodBye{
+    fn good_bye(&self) -> String;
+    fn good_bye_to(&self, name: &str) -> String; 
+}
+
+impl CanSayGoodBye for SimplePerson {
+    fn good_bye(&self) -> String {
+        format!("goodbye my name is {}", self.name)
+    }
+
+    fn good_bye_to(&self, name: &str) -> String {
+        format!("goodbye {}, my name is {}", name, self.name)
+    }
+}
+
+impl CanSayGoodBye for Person {
+    fn good_bye(&self) -> String {
+        format!("goodbye my name is {}", self.first_name)
+    }
+
+    fn good_bye_to(&self, name: &str) -> String {
+        format!("goodbye {}, my name is {}", name, self.first_name)
+    }
+}
+
+impl CanSayHello for Manusia {
+    fn say_hello(&self) -> String {
+        format!("hello my name is {}", self.name)
+    }
+
+    fn say_hello_to(&self, name: &str) -> String {
+        format!("hello {}, my name is {}", name, self.name)
+    }
+}
+
+impl CanSayHello for Person {
+    fn say_hello(&self) -> String {
+        format!("hello my name is {}", self.first_name)
+    }
+
+    fn say_hello_to(&self, name: &str) -> String {
+        format!("hello {}, my name is {}", name, self.first_name)
+    }
+    
+}
+
+fn say_hello_trait(person: &impl CanSayHello) {
+    println!("{}", person.say_hello());
+}
+
+#[test]
+fn test_trait() {
+    let person: Person = Person{
+        first_name: String::from("dwi"),
+        middle_name: String::from("moko"),
+        last_name: String::from("sakti"),
+        age: 30,
+    };
+
+    let manusia: Manusia = Manusia{
+        name: String::from("mokosakti"),
+        tinggi: 100,
+    };
+
+    say_hello_trait(&person);
+    say_hello_trait(&manusia);
+    hello_and_goodbye(&person);
+
+    let result = person.say_hello_to("budi");
+    println!("{}", result);
+
+    let result = person.hello();
+    println!("{}", result);
+
+    let result = manusia.hello();
+    println!("{}", result);
+}
+
+fn hello_and_goodbye(value: &(impl CanSayHello + CanSayGoodBye)) {
+    println!("{}", value.say_hello());
+    println!("{}", value.good_bye());
+}
+
+fn create_person(name: String) -> impl CanSayGoodBye {
+    // belum bisa dynamic return
+    // if name == String::from("moko") {
+    //     SimplePerson{name}
+    // } else {
+    //     Person{
+    //         first_name: name.clone(),
+    //         middle_name: name.clone(),
+    //         last_name: name.clone(),
+    //         age: 30,
+    //     }
+    // }
+    SimplePerson{name}
+}
+
+#[test]
+fn test_impl_trait() {
+    let person = create_person(String::from("saktisakti"));
+    println!("{}", person.good_bye());
+}
+
+trait CanSay: CanSayHello + CanSayGoodBye {
+    fn say(&self) {
+        println!("{}", self.say_hello());
+        println!("{}", self.good_bye());
+    }
 }
