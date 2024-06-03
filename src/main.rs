@@ -837,3 +837,41 @@ trait CanSay: CanSayHello + CanSayGoodBye {
         println!("{}", self.good_bye());
     }
 }
+
+struct Point<T> {
+    x: T,
+    y: T,
+}
+
+#[test]
+fn test_generic_struct() {
+    let integer = Point::<i32> {
+        x: 1, y: 2,
+    };
+
+    let float = Point::<f64> {
+        x: 1.0, y: 2.0,
+    };
+
+    println!("{} {}", integer.y, integer.x);
+    println!("{} {}", float.y, float.x);
+}
+
+enum Value<T> {
+    NONE,
+    VALUE(T)
+}
+
+#[test]
+fn test_generic_enum() {
+    let value: Value<i32> = Value::<i32>::VALUE(10);
+
+    match value {
+        Value::NONE => {
+            println!("none")
+        }
+        Value::VALUE(value) => {
+            println!("value {}", value)
+        }
+    }
+}
