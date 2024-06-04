@@ -875,3 +875,68 @@ fn test_generic_enum() {
         }
     }
 }
+
+struct Hi<T: CanSayGoodBye> {
+    value: T
+}
+
+#[test] 
+fn test_generic_bound() {
+    let hi = Hi::<SimplePerson>{
+        value: SimplePerson {
+            name: String::from("Moko")
+        }
+    };
+    println!("{}", hi.value.name);
+}
+
+fn min<T: PartialOrd>(value1: T, value2: T) -> T {
+    if value1 < value2 {
+        value1
+    } else {
+        value2
+    }
+}
+
+#[test]
+fn generic_in_function() {
+    let result = min::<i32>(10, 20);
+    println!("{}", result);
+
+    let result = min(10.0, 20.0);
+    println!("{}", result);
+}
+
+impl<T> Point<T> {
+    fn get_x(&self) -> &T {
+        &self.x
+    }
+    fn get_y(&self) -> &T {
+        &self.y
+    }
+}
+
+#[test]
+fn test_generic_method() {
+    let point: Point<i32> = Point {x:5, y:10};
+    println!("x: {}", point.get_x());
+    println!("y: {}", point.get_y());
+}
+
+trait GetValue<T> {
+    fn get_value(&self) -> &T;
+}
+
+impl<T> GetValue<T> for Point<T> {
+    fn get_value(&self) -> &T {
+        &self.x
+    }
+}
+
+#[test]
+fn test_generic_trait() {
+    let point: Point<i32> = Point {x:5, y:10};
+    println!("x: {}", point.get_x());
+    println!("y: {}", point.get_y());
+    println!("y: {}", point.get_value());
+}
