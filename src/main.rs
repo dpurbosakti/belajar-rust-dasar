@@ -933,10 +933,41 @@ impl<T> GetValue<T> for Point<T> {
     }
 }
 
+
+struct PointPoint<T = i32> {
+    x: T,
+    y: T,
+}
+
 #[test]
 fn test_generic_trait() {
     let point: Point<i32> = Point {x:5, y:10};
     println!("x: {}", point.get_x());
     println!("y: {}", point.get_y());
     println!("y: {}", point.get_value());
+}
+
+use core::ops::Add;
+
+struct Apple {
+    quantity: i32,
+}
+
+impl Add for Apple {
+    type Output = Apple;
+
+    fn add(self, rhs: Self) -> Self::Output{
+        Apple{
+            quantity: self.quantity + rhs.quantity,
+        }
+    }
+}
+
+#[test]
+fn test_operator_add() {
+    let apple1 = Apple{quantity:10};
+    let apple2 = Apple{quantity:10};
+
+    let apple3 = apple1 + apple2;
+    println!("{}", apple3.quantity);
 }
