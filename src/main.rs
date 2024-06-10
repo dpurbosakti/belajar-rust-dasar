@@ -1,5 +1,5 @@
 use core::slice;
-use std::fmt::format;
+use std::{cmp::Ordering, fmt::{format, Formatter}, result};
 mod first;
 mod second;
 mod third;
@@ -970,4 +970,89 @@ fn test_operator_add() {
 
     let apple3 = apple1 + apple2;
     println!("{}", apple3.quantity);
+}
+
+fn double(value: Option<i32>) -> Option<i32> {
+    match value {
+        None => None,
+        Some(i) => Some(i *2),
+    }
+}
+
+#[test]
+fn test_option() {
+    let result = double(Some((10)));
+    println!("{:?}", result);
+
+    let result = double(None);
+    println!("{:?}", result);
+}
+
+impl PartialEq for Apple {
+    fn eq(&self, other: &Self) -> bool {
+        self.quantity == other.quantity
+    }
+}
+
+impl PartialOrd for Apple {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        self.quantity.partial_cmp(&other.quantity)
+    }
+}
+
+#[test]
+fn test_compare() {
+    let apple1 = Apple{quantity:10};
+    let apple2 = Apple{quantity:20};
+
+    println!("Apple1 == Apple2: {}", apple1 == apple2);
+    println!("Apple1 > Apple2: {}", apple1 > apple2);
+    println!("Apple1 < Apple2: {}", apple1 < apple2);
+}
+
+#[test]
+fn test_string_manipulation() {
+    let s = String::from("Dwi atmoko purbo sakti");
+
+    println!("{}", s.to_uppercase());
+    println!("{}", s.to_lowercase());
+    println!("{}", s.len());
+    println!("{}", s.replace("Dwi", "moko"));
+    println!("{}", s.contains("sakti"));
+    println!("{}", s.starts_with("moko"));
+    println!("{}", s.ends_with("sakti"));
+    println!("{}", s.trim());
+    println!("{:?}", s.get(0..4));
+}
+
+struct Category {
+    id: String,
+    name: String,
+}
+
+use std::fmt::Debug;
+
+impl Debug for Category {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Category")
+            .field("id", &self.id)
+            .field("name", &self.name)
+            .finish()
+    }
+}
+
+#[test]
+fn test_formatting() {
+    // let person = SimplePerson{
+    //     name: String::from("moko")
+    // };
+
+    // println!("{}", person);
+
+    let category = Category{
+        id: String::from("1"),
+        name: String::from("Category 1"),
+    };
+
+    println!("{:?}", category);
 }
