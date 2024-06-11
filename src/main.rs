@@ -1056,3 +1056,13 @@ fn test_formatting() {
 
     println!("{:?}", category);
 }
+
+#[test]
+fn test_closure() {
+    let sum: fn(i32, i32) -> i32 = |value1: i32, value2: i32| -> i32  {
+        value1 + value2
+    };
+
+    let result = sum(1, 2);
+    println!("result: {}", result);
+}
